@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'sucesso' else 'danger' if category == 'erro' else 'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card shadow p-4 mb-4">
+        <h2 class="text-center mb-3">Gerenciar Usuários</h2>
+        <h4 class="mb-3">Adicionar Novo Usuário</h4>
+
+        <form method="POST" action="{{ url_for('gerenciar_usuarios') }}">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="senha" class="form-label">Senha:</label>
+                <input type="password" class="form-control" id="senha" name="senha" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo:</label>
+                <select class="form-select" id="tipo" name="tipo">
+                    <option value="admin">Administrador</option>
+                    <option value="comum">Usuário Comum</option>
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card shadow p-4">
+        <h4 class="mb-3">Usuários Cadastrados</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Tipo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.id }}</td>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.tipo }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('editar_usuario', id=usuario.id) }}" class="btn btn-sm btn-warning">Editar</a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-usuario-id="{{ usuario.id }}" data-usuario-nome="{{ usuario.username }}">
+                                    Excluir
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-start mt-3">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalExcluir" tabindex="-1" aria-labelledby="modalExcluirLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="modalExcluirLabel">Confirmar exclusão</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        Tem certeza que deseja excluir o usuário <strong id="usuario-nome"></strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a id="confirmar-excluir" class="btn btn-danger">Excluir</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    const modal = document.getElementById('modalExcluir');
+    modal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const usuarioId = button.getAttribute('data-usuario-id');
+        const usuarioNome = button.getAttribute('data-usuario-nome');
+        modal.querySelector('#usuario-nome').textContent = usuarioNome;
+        modal.querySelector('#confirmar-excluir').href = '/usuarios/excluir/' + usuarioId;
+    });
+</script>
+{% endblock %}

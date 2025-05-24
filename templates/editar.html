@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">Editar Jogo</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="{{ jogo.nome }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="preco" class="form-label">Preço:</label>
+                <input type="number" class="form-control" id="preco" step="0.01" name="preco" value="{{ jogo.preco }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="estoque" class="form-label">Estoque:</label>
+                <input type="number" class="form-control" id="estoque" name="estoque" value="{{ jogo.estoque }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="plataforma" class="form-label">Plataforma:</label>
+                <select class="form-select" id="plataforma" name="plataforma" required>
+                    {% for plataforma in plataformas %}
+                    <option value="{{ plataforma.id }}" {% if plataforma.id == jogo.plataforma_id %}selected{% endif %}>
+                        {{ plataforma.nome }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="categoria" class="form-label">Categoria:</label>
+                <select class="form-select" id="categoria" name="categoria" required>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if categoria.id == jogo.categoria_id %}selected{% endif %}>
+                        {{ categoria.nome }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

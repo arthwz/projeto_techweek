@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">Cadastrar Novo Jogo</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="preco" class="form-label">Preço:</label>
+                <input type="number" class="form-control" id="preco" step="0.01" name="preco" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="estoque" class="form-label">Estoque:</label>
+                <input type="number" class="form-control" id="estoque" name="estoque" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="plataforma" class="form-label">Plataforma:</label>
+                <select class="form-select" id="plataforma" name="plataforma" required>
+                    {% for plataforma in plataformas %}
+                    <option value="{{ plataforma.id }}">{{ plataforma.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="categoria" class="form-label">Categoria:</label>
+                <select class="form-select" id="categoria" name="categoria" required>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
+                <button type="submit" class="btn btn-success">Cadastrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
